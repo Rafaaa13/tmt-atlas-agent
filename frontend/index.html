@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0e3d3b">
+  <title>TMT Atlas｜TMT 研究工作台</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/workbench.css">
+</head>
+<body>
+  <div id="app" class="app-shell">
+    <aside class="sidebar" aria-label="主导航">
+      <div class="brand">
+        <div class="brand-mark">TA</div>
+        <div>
+          <div class="brand-name">TMT Atlas</div>
+          <div class="brand-sub">Research Workbench</div>
+        </div>
+      </div>
+      <div class="workspace-switcher">
+        <div class="eyebrow">当前工作区</div>
+        <div class="workspace-name">TMT Atlas Official Facts <span class="status-dot"></span></div>
+        <div class="workspace-meta">官方历史事实 · 本地优先 · 可审计派生值</div>
+      </div>
+      <nav class="nav-list">
+        <button class="nav-item active" data-view="overview"><span class="nav-icon">01</span><span>研究总览</span></button>
+        <button class="nav-item" data-view="company"><span class="nav-icon">02</span><span>公司快照</span></button>
+        <button class="nav-item" data-view="sector"><span class="nav-icon">03</span><span>赛道扫描</span></button>
+        <button class="nav-item" data-view="events"><span class="nav-icon">04</span><span>事件雷达</span></button>
+        <button class="nav-item" data-view="memo"><span class="nav-icon">05</span><span>研究备忘录</span></button>
+        <button class="nav-item" data-view="sources"><span class="nav-icon">06</span><span>来源与设置</span></button>
+        <div class="extension-nav-label">本地研究工具</div>
+        <div class="extension-nav">
+          <button class="nav-item" data-view="evidence"><span class="nav-icon">07</span><span>证据审核</span></button>
+          <button class="nav-item" data-view="finance"><span class="nav-icon">08</span><span>金融计算</span></button>
+          <button class="nav-item" data-view="automation"><span class="nav-icon">09</span><span>授权收集</span></button>
+          <button class="nav-item" data-view="agent"><span class="nav-icon">10</span><span>Agent 自动化</span></button>
+        </div>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="privacy-card">
+          <div class="privacy-title"><span class="privacy-lock">LOCAL</span> 本地优先</div>
+          <p>不接入 LLM 也能完成核心研究流程。外部 API 默认关闭。</p>
+        </div>
+        <div class="sidebar-footer">TMT Atlas v0.1 · 研究辅助工具</div>
+      </div>
+    </aside>
+
+    <main class="main-panel">
+      <header class="topbar">
+        <div class="breadcrumb"><span class="crumb-muted">Workspace</span><span>/</span><span id="breadcrumb-current">研究总览</span></div>
+        <div class="top-actions">
+          <button class="ghost-button" data-action="show-sources">查看来源</button>
+          <div class="llm-status"><span class="llm-dot"></span><span id="llm-status-label">LLM 未启用</span></div>
+        </div>
+      </header>
+      <div id="toast" class="toast" role="status"></div>
+      <section id="content" class="content-area"></section>
+    </main>
+  </div>
+      <script src="/app.js"></script>
+  <script src="/workbench.js"></script>
+</body>
+</html>

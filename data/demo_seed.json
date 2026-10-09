@@ -1,0 +1,214 @@
+{
+  "dataset": {
+    "name": "TMT Atlas Demo Corpus",
+    "version": "0.1.0",
+    "as_of": "2026-10-08",
+    "status": "illustrative_demo",
+    "notice": "The normalized metric values in this seed file are illustrative demo values for validating product workflows. They are not live market data and must not be used for investment decisions. Official public source links are maintained separately in source_registry.json.",
+    "currency_convention": "USD billions unless otherwise noted",
+    "period_convention": "FY2025 / demo-normalized",
+    "source_policy": "Use official IR, SEC EDGAR, HKEX, SSE or company filing pages as the source of truth. Do not copy restricted reports into the public repository."
+  },
+  "companies": [
+    {
+      "id": "nvidia",
+      "name": "NVIDIA",
+      "name_zh": "英伟达",
+      "ticker": "NVDA",
+      "country": "US",
+      "listing": "NASDAQ",
+      "sector": "AI基础设施/半导体",
+      "description": "GPU、加速计算与数据中心基础设施供应商；适合演示 AI 资本开支、数据中心收入和供应链风险分析。",
+      "source_ids": ["src-nvidia-ir", "src-nvidia-sec"],
+      "metrics": [
+        {"key":"revenue","label":"总收入","value":130.5,"unit":"USD bn","period":"FY2025","trend":0.51,"source_id":"src-nvidia-sec","status":"demo"},
+        {"key":"revenue_growth","label":"收入增速","value":0.51,"unit":"%","period":"FY2025","trend":0.12,"source_id":"src-nvidia-sec","status":"demo"},
+        {"key":"gross_margin","label":"毛利率","value":0.75,"unit":"%","period":"FY2025","trend":0.03,"source_id":"src-nvidia-sec","status":"demo"},
+        {"key":"operating_margin","label":"营业利润率","value":0.62,"unit":"%","period":"FY2025","trend":0.04,"source_id":"src-nvidia-sec","status":"demo"},
+        {"key":"rd_ratio","label":"研发费用率","value":0.09,"unit":"%","period":"FY2025","trend":-0.01,"source_id":"src-nvidia-sec","status":"demo"},
+        {"key":"capex","label":"资本开支","value":2.1,"unit":"USD bn","period":"FY2025","trend":0.21,"source_id":"src-nvidia-sec","status":"demo"},
+        {"key":"core_segment_share","label":"数据中心/核心业务占比","value":0.88,"unit":"%","period":"FY2025","trend":0.05,"source_id":"src-nvidia-ir","status":"demo"}
+      ]
+    },
+    {
+      "id": "smic",
+      "name": "SMIC",
+      "name_zh": "中芯国际",
+      "ticker": "0981.HK / 688981.SH",
+      "country": "CN",
+      "listing": "HKEX / SSE STAR",
+      "sector": "AI基础设施/半导体",
+      "description": "晶圆代工企业；适合演示产能、资本开支、工艺节点和出口管制风险的证据管理。",
+      "source_ids": ["src-smic-ir", "src-smic-sse"],
+      "metrics": [
+        {"key":"revenue","label":"总收入","value":8.2,"unit":"USD bn","period":"FY2025","trend":0.18,"source_id":"src-smic-ir","status":"demo"},
+        {"key":"revenue_growth","label":"收入增速","value":0.18,"unit":"%","period":"FY2025","trend":0.14,"source_id":"src-smic-ir","status":"demo"},
+        {"key":"gross_margin","label":"毛利率","value":0.19,"unit":"%","period":"FY2025","trend":-0.03,"source_id":"src-smic-ir","status":"demo"},
+        {"key":"operating_margin","label":"营业利润率","value":0.08,"unit":"%","period":"FY2025","trend":-0.04,"source_id":"src-smic-ir","status":"demo"},
+        {"key":"rd_ratio","label":"研发费用率","value":0.10,"unit":"%","period":"FY2025","trend":0.01,"source_id":"src-smic-ir","status":"demo"},
+        {"key":"capex","label":"资本开支","value":7.4,"unit":"USD bn","period":"FY2025","trend":0.09,"source_id":"src-smic-sse","status":"demo"},
+        {"key":"utilization","label":"产能利用率","value":0.82,"unit":"%","period":"FY2025","trend":0.06,"source_id":"src-smic-ir","status":"demo"}
+      ]
+    },
+    {
+      "id": "microsoft",
+      "name": "Microsoft",
+      "name_zh": "微软",
+      "ticker": "MSFT",
+      "country": "US",
+      "listing": "NASDAQ",
+      "sector": "云/SaaS",
+      "description": "云计算、生产力软件与企业服务平台；适合演示财年错位、分部披露和 AI 资本投入。",
+      "source_ids": ["src-microsoft-ir", "src-microsoft-sec"],
+      "metrics": [
+        {"key":"revenue","label":"总收入","value":281.7,"unit":"USD bn","period":"FY2025","trend":0.16,"source_id":"src-microsoft-sec","status":"demo"},
+        {"key":"revenue_growth","label":"收入增速","value":0.16,"unit":"%","period":"FY2025","trend":0.02,"source_id":"src-microsoft-sec","status":"demo"},
+        {"key":"gross_margin","label":"毛利率","value":0.69,"unit":"%","period":"FY2025","trend":0.01,"source_id":"src-microsoft-sec","status":"demo"},
+        {"key":"operating_margin","label":"营业利润率","value":0.45,"unit":"%","period":"FY2025","trend":0.02,"source_id":"src-microsoft-sec","status":"demo"},
+        {"key":"rd_ratio","label":"研发费用率","value":0.13,"unit":"%","period":"FY2025","trend":0.01,"source_id":"src-microsoft-sec","status":"demo"},
+        {"key":"capex","label":"资本开支","value":80.0,"unit":"USD bn","period":"FY2025","trend":0.35,"source_id":"src-microsoft-sec","status":"demo"},
+        {"key":"cloud_share","label":"云/智能云相关收入占比","value":0.44,"unit":"%","period":"FY2025","trend":0.03,"source_id":"src-microsoft-ir","status":"demo"}
+      ]
+    },
+    {
+      "id": "alibaba",
+      "name": "Alibaba",
+      "name_zh": "阿里巴巴",
+      "ticker": "BABA / 9988.HK",
+      "country": "CN",
+      "listing": "NYSE / HKEX",
+      "sector": "云/SaaS",
+      "description": "电商、云计算与平台生态企业；适合演示财年错位、IFRS 与分部重组口径。",
+      "source_ids": ["src-alibaba-ir", "src-alibaba-sec", "src-hkex"],
+      "metrics": [
+        {"key":"revenue","label":"总收入","value":137.3,"unit":"USD bn","period":"FY2025","trend":0.08,"source_id":"src-alibaba-sec","status":"demo"},
+        {"key":"revenue_growth","label":"收入增速","value":0.08,"unit":"%","period":"FY2025","trend":0.01,"source_id":"src-alibaba-sec","status":"demo"},
+        {"key":"gross_margin","label":"毛利率","value":0.42,"unit":"%","period":"FY2025","trend":-0.02,"source_id":"src-alibaba-sec","status":"demo"},
+        {"key":"operating_margin","label":"营业利润率","value":0.15,"unit":"%","period":"FY2025","trend":0.02,"source_id":"src-alibaba-sec","status":"demo"},
+        {"key":"rd_ratio","label":"研发费用率","value":0.08,"unit":"%","period":"FY2025","trend":0.01,"source_id":"src-alibaba-sec","status":"demo"},
+        {"key":"capex","label":"资本开支","value":10.5,"unit":"USD bn","period":"FY2025","trend":0.18,"source_id":"src-alibaba-sec","status":"demo"},
+        {"key":"cloud_share","label":"云业务收入占比","value":0.12,"unit":"%","period":"FY2025","trend":0.02,"source_id":"src-alibaba-ir","status":"demo"}
+      ]
+    },
+    {
+      "id": "baidu",
+      "name": "Baidu",
+      "name_zh": "百度",
+      "ticker": "BIDU / 9888.HK",
+      "country": "CN",
+      "listing": "NASDAQ / HKEX",
+      "sector": "云/SaaS",
+      "description": "搜索、智能云和生成式 AI 平台；适合演示 AI 产品商业化、广告与云业务拆分。",
+      "source_ids": ["src-baidu-ir", "src-baidu-sec"],
+      "metrics": [
+        {"key":"revenue","label":"总收入","value":19.2,"unit":"USD bn","period":"FY2025","trend":0.04,"source_id":"src-baidu-sec","status":"demo"},
+        {"key":"revenue_growth","label":"收入增速","value":0.04,"unit":"%","period":"FY2025","trend":0.03,"source_id":"src-baidu-sec","status":"demo"},
+        {"key":"gross_margin","label":"毛利率","value":0.52,"unit":"%","period":"FY2025","trend":0.01,"source_id":"src-baidu-sec","status":"demo"},
+        {"key":"operating_margin","label":"营业利润率","value":0.16,"unit":"%","period":"FY2025","trend":-0.02,"source_id":"src-baidu-sec","status":"demo"},
+        {"key":"rd_ratio","label":"研发费用率","value":0.18,"unit":"%","period":"FY2025","trend":0.00,"source_id":"src-baidu-sec","status":"demo"},
+        {"key":"capex","label":"资本开支","value":2.0,"unit":"USD bn","period":"FY2025","trend":0.12,"source_id":"src-baidu-sec","status":"demo"},
+        {"key":"cloud_share","label":"智能云/云业务收入占比","value":0.18,"unit":"%","period":"FY2025","trend":0.03,"source_id":"src-baidu-ir","status":"demo"}
+      ]
+    },
+    {
+      "id": "amazon",
+      "name": "Amazon",
+      "name_zh": "亚马逊",
+      "ticker": "AMZN",
+      "country": "US",
+      "listing": "NASDAQ",
+      "sector": "平台/电商/广告",
+      "description": "电商、AWS 与广告业务并存；适合演示分部收入、平台生态和 AI 资本支出。",
+      "source_ids": ["src-amazon-ir", "src-amazon-sec"],
+      "metrics": [
+        {"key":"revenue","label":"总收入","value":716.9,"unit":"USD bn","period":"FY2025","trend":0.12,"source_id":"src-amazon-sec","status":"demo"},
+        {"key":"revenue_growth","label":"收入增速","value":0.12,"unit":"%","period":"FY2025","trend":0.02,"source_id":"src-amazon-sec","status":"demo"},
+        {"key":"gross_margin","label":"毛利率","value":0.49,"unit":"%","period":"FY2025","trend":0.02,"source_id":"src-amazon-sec","status":"demo"},
+        {"key":"operating_margin","label":"营业利润率","value":0.11,"unit":"%","period":"FY2025","trend":0.03,"source_id":"src-amazon-sec","status":"demo"},
+        {"key":"rd_ratio","label":"技术与内容费用率","value":0.16,"unit":"%","period":"FY2025","trend":0.01,"source_id":"src-amazon-sec","status":"demo"},
+        {"key":"capex","label":"资本开支","value":105.0,"unit":"USD bn","period":"FY2025","trend":0.31,"source_id":"src-amazon-sec","status":"demo"},
+        {"key":"cloud_share","label":"AWS 收入占比","value":0.18,"unit":"%","period":"FY2025","trend":0.01,"source_id":"src-amazon-sec","status":"demo"}
+      ]
+    },
+    {
+      "id": "alphabet",
+      "name": "Alphabet",
+      "name_zh": "谷歌母公司",
+      "ticker": "GOOG/GOOGL",
+      "country": "US",
+      "listing": "NASDAQ",
+      "sector": "平台/电商/广告",
+      "description": "搜索广告、YouTube、Google Cloud 和 AI 基础设施；适合演示广告平台与云业务的交叉分析。",
+      "source_ids": ["src-alphabet-ir", "src-alphabet-sec"],
+      "metrics": [
+        {"key":"revenue","label":"总收入","value":402.8,"unit":"USD bn","period":"FY2025","trend":0.14,"source_id":"src-alphabet-sec","status":"demo"},
+        {"key":"revenue_growth","label":"收入增速","value":0.14,"unit":"%","period":"FY2025","trend":0.03,"source_id":"src-alphabet-sec","status":"demo"},
+        {"key":"gross_margin","label":"毛利率","value":0.60,"unit":"%","period":"FY2025","trend":0.02,"source_id":"src-alphabet-sec","status":"demo"},
+        {"key":"operating_margin","label":"营业利润率","value":0.33,"unit":"%","period":"FY2025","trend":0.03,"source_id":"src-alphabet-sec","status":"demo"},
+        {"key":"rd_ratio","label":"研发费用率","value":0.16,"unit":"%","period":"FY2025","trend":0.00,"source_id":"src-alphabet-sec","status":"demo"},
+        {"key":"capex","label":"资本开支","value":85.0,"unit":"USD bn","period":"FY2025","trend":0.28,"source_id":"src-alphabet-sec","status":"demo"},
+        {"key":"cloud_share","label":"Google Cloud 收入占比","value":0.14,"unit":"%","period":"FY2025","trend":0.02,"source_id":"src-alphabet-sec","status":"demo"}
+      ]
+    },
+    {
+      "id": "meta",
+      "name": "Meta",
+      "name_zh": "Meta",
+      "ticker": "META",
+      "country": "US",
+      "listing": "NASDAQ",
+      "sector": "平台/电商/广告",
+      "description": "广告平台、社交产品与 AI/AR 投入并存；适合演示用户指标、广告效率和资本开支权衡。",
+      "source_ids": ["src-meta-ir", "src-meta-sec"],
+      "metrics": [
+        {"key":"revenue","label":"总收入","value":201.0,"unit":"USD bn","period":"FY2025","trend":0.19,"source_id":"src-meta-sec","status":"demo"},
+        {"key":"revenue_growth","label":"收入增速","value":0.19,"unit":"%","period":"FY2025","trend":0.05,"source_id":"src-meta-sec","status":"demo"},
+        {"key":"gross_margin","label":"毛利率","value":0.82,"unit":"%","period":"FY2025","trend":0.01,"source_id":"src-meta-sec","status":"demo"},
+        {"key":"operating_margin","label":"营业利润率","value":0.42,"unit":"%","period":"FY2025","trend":0.06,"source_id":"src-meta-sec","status":"demo"},
+        {"key":"rd_ratio","label":"研发费用率","value":0.27,"unit":"%","period":"FY2025","trend":0.02,"source_id":"src-meta-sec","status":"demo"},
+        {"key":"capex","label":"资本开支","value":72.0,"unit":"USD bn","period":"FY2025","trend":0.35,"source_id":"src-meta-sec","status":"demo"},
+        {"key":"user_growth","label":"日活/用户增长代理","value":0.08,"unit":"%","period":"FY2025","trend":0.01,"source_id":"src-meta-sec","status":"demo"}
+      ]
+    },
+    {
+      "id": "tencent",
+      "name": "Tencent",
+      "name_zh": "腾讯",
+      "ticker": "0700.HK",
+      "country": "CN",
+      "listing": "HKEX",
+      "sector": "平台/电商/广告",
+      "description": "社交、游戏、广告、金融科技与企业服务平台；适合演示多业务分部和非 IFRS 指标边界。",
+      "source_ids": ["src-tencent-ir", "src-hkex"],
+      "metrics": [
+        {"key":"revenue","label":"总收入","value":92.5,"unit":"USD bn","period":"FY2025","trend":0.10,"source_id":"src-tencent-ir","status":"demo"},
+        {"key":"revenue_growth","label":"收入增速","value":0.10,"unit":"%","period":"FY2025","trend":0.02,"source_id":"src-tencent-ir","status":"demo"},
+        {"key":"gross_margin","label":"毛利率","value":0.53,"unit":"%","period":"FY2025","trend":0.01,"source_id":"src-tencent-ir","status":"demo"},
+        {"key":"operating_margin","label":"营业利润率","value":0.28,"unit":"%","period":"FY2025","trend":0.04,"source_id":"src-tencent-ir","status":"demo"},
+        {"key":"rd_ratio","label":"研发费用率","value":0.16,"unit":"%","period":"FY2025","trend":0.01,"source_id":"src-tencent-ir","status":"demo"},
+        {"key":"capex","label":"资本开支","value":6.4,"unit":"USD bn","period":"FY2025","trend":0.16,"source_id":"src-tencent-ir","status":"demo"},
+        {"key":"user_growth","label":"用户增长代理","value":0.06,"unit":"%","period":"FY2025","trend":0.01,"source_id":"src-tencent-ir","status":"demo"}
+      ]
+    }
+  ],
+  "events": [
+    {"id":"evt-001","company_id":"nvidia","date":"2026-09-24","type":"财报/业绩","title":"AI 基础设施需求更新（演示事件）","summary":"演示如何将 AI 资本开支、数据中心业务和供应链风险拆成可审阅的影响链。","impact":"高","source_id":"src-nvidia-ir","demo_only":true},
+    {"id":"evt-002","company_id":"nvidia","date":"2026-08-15","type":"监管/供应链","title":"出口管制与供应链风险（演示事件）","summary":"演示如何把监管文本、产品范围和收入暴露拆成事实、推断与待验证问题。","impact":"高","source_id":"src-nvidia-sec","demo_only":true},
+    {"id":"evt-003","company_id":"smic","date":"2026-09-30","type":"产能/资本开支","title":"晶圆代工产能与资本开支更新（演示事件）","summary":"演示产能利用率、资本开支和工艺节点之间的分析关系。","impact":"中","source_id":"src-smic-ir","demo_only":true},
+    {"id":"evt-004","company_id":"microsoft","date":"2026-07-30","type":"财报/业绩","title":"Azure 与 AI 资本开支更新（演示事件）","summary":"演示如何处理财年错位、固定汇率和管理层相对增长表述。","impact":"高","source_id":"src-microsoft-ir","demo_only":true},
+    {"id":"evt-005","company_id":"alibaba","date":"2026-08-20","type":"分部/云业务","title":"云业务与 AI 投入更新（演示事件）","summary":"演示如何识别分部重组、IFRS 口径和披露可比性问题。","impact":"中","source_id":"src-alibaba-ir","demo_only":true},
+    {"id":"evt-006","company_id":"baidu","date":"2026-09-06","type":"资本市场/上市","title":"香港双重主要上市公告（演示事件）","summary":"演示如何将上市与互联互通相关的公开公告入口纳入事件管理；正式研究需核对公告原文和真实日期。","impact":"中","source_id":"src-baidu-ir","demo_only":true},
+    {"id":"evt-007","company_id":"amazon","date":"2026-07-31","type":"财报/业绩","title":"AWS、电商与广告分部更新（演示事件）","summary":"演示一个 10-K 同时覆盖云、电商和广告三个研究模块的场景。","impact":"高","source_id":"src-amazon-ir","demo_only":true},
+    {"id":"evt-008","company_id":"alphabet","date":"2026-08-01","type":"财报/业绩","title":"广告、云与 AI 资本支出更新（演示事件）","summary":"演示广告平台收入、云业务和 AI 基础设施投入的交叉分析。","impact":"高","source_id":"src-alphabet-ir","demo_only":true},
+    {"id":"evt-009","company_id":"meta","date":"2026-08-06","type":"财报/业绩","title":"广告效率与 AI/AR 投入更新（演示事件）","summary":"演示用户指标、广告业务和资本开支之间的证据链。","impact":"中","source_id":"src-meta-ir","demo_only":true},
+    {"id":"evt-010","company_id":"tencent","date":"2026-08-13","type":"财报/业绩","title":"游戏、广告与企业服务更新（演示事件）","summary":"演示多业务平台的分部指标、非 IFRS 指标和用户增长口径。","impact":"中","source_id":"src-tencent-ir","demo_only":true}
+  ],
+  "research_prompts": [
+    {"id":"company-snapshot","label":"公司快照","prompt":"请更新 {company} 最近一个报告期的经营变化，列出收入、核心业务、利润率、资本开支/现金流，并为每个数字附上来源。"},
+    {"id":"cloud-compare","label":"云业务比较","prompt":"请比较 {company} 与同赛道公司在云业务收入增速、利润率、研发投入和资本开支上的差异，并标记不可比项。"},
+    {"id":"sector-scan","label":"赛道扫描","prompt":"请扫描 {sector} 的公司，比较收入增速、利润率、研发费用率和资本开支，解释指标口径差异。"},
+    {"id":"event-analysis","label":"事件影响分析","prompt":"请分析这条公告/新闻对 {company}、业务、指标和风险的可能影响，分别列出直接事实、推断和待验证问题。"},
+    {"id":"memo","label":"研究备忘录","prompt":"请把当前工作区已确认的事实整理成一页研究简报，区分事实、计算、推断和待办问题。"},
+    {"id":"latest-news","label":"最新资讯收集","prompt":"请扫描我已经授权的数据源，列出过去 7 天的新公告、财报、IR 新闻和研究线索，并按重要性排序；没有授权的数据源不得访问。"}
+  ]
+}

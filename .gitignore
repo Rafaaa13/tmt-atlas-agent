@@ -1,0 +1,30 @@
+# Python caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Local runtime state — never commit user settings, added sources, or SQLite workspace/collector data
+data/local_settings.json
+data/local_sources.json
+data/workspace_state/
+data/collector_state/
+workspace_state/
+collector_state/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# OS/editor files
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Generated exports
+*.html~
+exports/
+reports/
