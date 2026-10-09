@@ -924,14 +924,6 @@ class Handler(BaseHTTPRequestHandler):
             elif path == "/api/agent/artifacts":
                 run_id = (query.get("run_id") or [None])[0]
                 self.send_json({"artifacts": AGENT_ORCHESTRATOR.artifacts(run_id)})
-            elif path.startswith("/api/agent/artifacts/") and path.endswith("/review"):
-                parts = path.split("/")
-                if len(parts) != 6 or not parts[4]:
-                    self.send_json({"error": "not_found"}, 404)
-                    return
-                self.send_json({"artifact": AGENT_ORCHESTRATOR.review_artifact(
-                    unquote(parts[4]), payload.get("decision", payload.get("status")), payload.get("reason")
-                )})
             elif path.startswith("/api/agent/artifacts/"):
                 artifact_id = path.split("/")[-1]
                 self.send_json({"artifact": AGENT_ORCHESTRATOR.get_artifact(unquote(artifact_id))})
@@ -1018,6 +1010,14 @@ class Handler(BaseHTTPRequestHandler):
                             scheduled_for=payload.get("scheduled_for"),
                         )
                     })
+            elif path.startswith("/api/agent/artifacts/") and path.endswith("/review"):
+                parts = path.split("/")
+                if len(parts) != 6 or not parts[4]:
+                    self.send_json({"error": "not_found"}, 404)
+                    return
+                self.send_json({"artifact": AGENT_ORCHESTRATOR.review_artifact(
+                    unquote(parts[4]), payload.get("decision", payload.get("status")), payload.get("reason")
+                )})
             elif path.startswith("/api/agent/review-gates/") and path.endswith("/decision"):
                 parts = path.split("/")
                 if len(parts) != 6 or not parts[4]:

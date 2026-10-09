@@ -78,6 +78,12 @@
     return `<article class="agent-run-row"><div><strong>${escLocal(agentKindLabel(run.kind))}</strong><div class="agent-plan-meta">${escLocal(run.created_at || '')} · ${escLocal(run.trigger || 'manual')}</div></div>${badge(agentStatusLabel(run.status), agentStatusType(run.status))}<div class="agent-run-tasks">${tasks.map(task => `${badge(agentStatusLabel(task.status), agentStatusType(task.status))} ${escLocal(task.label)}`).join(' · ') || '暂无任务详情'}</div></article>`;
   }
 
+  function renderArtifactRow(artifact) {
+    const result = artifact.payload?.result || artifact.data?.result || artifact.payload || {};
+    const title = result.title || result.company?.name_zh || agentKindLabel(artifact.kind);
+    const status = artifact.status || 'draft';
+    return `<article class="agent-plan-card"><div class="agent-plan-head"><div><div class="agent-plan-title">${escLocal(title)}</div><div class="agent-plan-meta">${escLocal(agentKindLabel(artifact.kind))} · ${escLocal(artifact.created_at || '')}</div></div>${badge(agentStatusLabel(status), agentStatusType(status))}</div><div class="agent-plan-detail">${escLocal(artifact.payload?.data_mode || 'official_historical')} · facts approved: ${artifact.payload?.facts_approved === false ? '否' : '需审核'}</div><div class="agent-plan-actions">${status === 'draft' ? `<button class="outline-button agent-artifact-review" data-artifact-id="${escLocal(artifact.id)}" data-artifact-decision="accepted">接受草稿</button><button class="ghost-button agent-artifact-review" data-artifact-id="${escLocal(artifact.id)}" data-artifact-decision="rejected">拒绝</button>` : ''}</div></article>`;
+  }
   function renderReviewCard(item, gate) {
     const isGate = Boolean(gate);
     const id = isGate ? gate.id : item.id;
@@ -95,6 +101,8 @@
     return `<article class="review-card"><div class="agent-plan-head"><div><div class="agent-plan-title">${escLocal(title)}</div><div class="agent-plan-meta">${escLocal(sourceTitle)} · ${escLocal(date)}</div></div>${badge(agentStatusLabel(status), agentStatusType(status))}</div><div class="agent-review-url">${escLocal(url)}</div>${item?.facts_approved === false || isGate ? '<div class="settings-help">资讯线索状态不会改变金融事实审核状态。</div>' : ''}${reviewControls}</article>`;
   }
 
+
+
   function mergeReviewQueue(items, gates) {
     const itemById = new Map((items || []).map(item => [item.id, item]));
     const cards = [];
@@ -111,13 +119,13 @@
   }
 
   async function loadAgentDashboard() {
-    const [plansResult, runsResult, gatesResult, itemsResult] = await Promise.all([
-      api('/api/agent/plans'), api('/api/agent/runs'), api('/api/agent/review-gates?status=pending'), api('/api/agent/retrieval-items?status=pending'),
+    const [plansResult, runsResult, gatesResult, itemsResult, artifactsResult] = await Promise.all([
+      api('/api/agent/plans'), api('/api/agent/runs'), api('/api/agent/review-gates?status=pending'), api('/api/agent/retrieval-items?status=pending'), api('/api/agent/artifacts'),
     ]);
     const taskResults = await Promise.all((runsResult.runs || []).slice(0, 8).map(run => api(`/api/agent/runs/${encodeURIComponent(run.id)}/tasks`).catch(() => ({ tasks: [] }))));
     const tasksByRun = {};
     (runsResult.runs || []).slice(0, 8).forEach((run, index) => { tasksByRun[run.id] = taskResults[index].tasks || []; });
-    return { plans: plansResult.plans || [], runs: runsResult.runs || [], gates: gatesResult.review_gates || [], items: itemsResult.retrieval_items || [], tasksByRun };
+    return { plans: plansResult.plans || [], runs: runsResult.runs || [], gates: gatesResult.review_gates || [], items: itemsResult.retrieval_items || [], artifacts: artifactsResult.artifacts || [], tasksByRun };
   }
 
   T.renderAgent = async function renderAgent() {
@@ -131,7 +139,7 @@
       ]);
       const pendingReviews = pendingReviewIds.size;
       const reviewQueue = mergeReviewQueue(dashboard.items, dashboard.gates);
-      $('#content').innerHTML = `${extensionHead('10 · AGENT AUTOMATION', 'Agent 自动化', '把研究任务变成可批准、可暂停、可重跑的本地计划；每次运行都保留草稿状态，资讯和事实必须经过人工审核。')}<div class="agent-guardrail"><div>${officialDataBadge()} <strong>官方历史事实是唯一数字来源。</strong> Agent 只能刷新本地快照、生成可审阅草稿或收集已授权来源的元数据，不会自动批准金融事实。</div><button class="outline-button" id="refresh-agent">刷新状态</button></div><div class="agent-grid"><section class="card"><div class="card-title-row"><div><h3 class="card-title">新建研究计划</h3><p class="card-caption">计划先保存为“待确认”，批准后才可运行。</p></div></div><form id="agent-plan-form" class="form-stack"><div class="field"><label for="agent-kind">计划类型</label><select id="agent-kind"><option value="company_snapshot_refresh">公司快照刷新</option><option value="sector_scan">赛道扫描</option><option value="event_triage">事件分诊</option><option value="memo_draft">备忘录草稿</option><option value="collection_cycle">授权资讯收集</option></select></div><div class="field"><label for="agent-name">计划名称</label><input id="agent-name" placeholder="例如：每周微软官方快照"></div><div class="field"><label for="agent-interval">间隔（分钟，至少 15）</label><input id="agent-interval" type="number" value="60" min="15" required></div><div id="agent-kind-fields">${agentPlanPayloadFields('company_snapshot_refresh')}</div><button class="action-button" type="submit">保存为待确认计划</button><div class="settings-help">授权收集必须同时提供来源范围和明确授权；所有研究结果都保持 draft。</div></form></section><section class="card"><div class="card-title-row"><div><h3 class="card-title">计划队列</h3><p class="card-caption">批准、运行和暂停都写入本地审计记录。</p></div><span class="pill demo">${dashboard.plans.length} 个计划</span></div><div class="agent-list">${dashboard.plans.length ? dashboard.plans.map(renderAgentPlan).join('') : '<div class="empty">还没有 Agent 计划。</div>'}</div></section></div><div class="agent-grid agent-grid-bottom"><section class="card"><div class="card-title-row"><div><h3 class="card-title">最近运行</h3><p class="card-caption">运行结果只会生成草稿或待审核线索。</p></div><button class="link-button" id="refresh-agent-runs">刷新</button></div><div class="agent-list">${dashboard.runs.length ? dashboard.runs.slice(0, 8).map(run => renderAgentRun(run, dashboard.tasksByRun)).join('') : '<div class="empty">还没有运行记录。</div>'}</div></section><section class="card"><div class="card-title-row"><div><h3 class="card-title">审核队列</h3><p class="card-caption">接受线索不等于批准事实；同一条线索的 review gate 与来源记录会合并显示。</p></div><span class="pill ${pendingReviews ? 'medium' : 'source'}">${pendingReviews} 条待审核</span></div><div class="review-list">${reviewQueue || '<div class="empty">暂无待审核线索。</div>'}</div></section></div>`;
+      $('#content').innerHTML = `${extensionHead('10 · AGENT AUTOMATION', 'Agent 自动化', '把研究任务变成可批准、可暂停、可重跑的本地计划；每次运行都保留草稿状态，资讯和事实必须经过人工审核。')}<div class="agent-guardrail"><div>${officialDataBadge()} <strong>官方历史事实是唯一数字来源。</strong> Agent 只能刷新本地快照、生成可审阅草稿或收集已授权来源的元数据，不会自动批准金融事实。</div><button class="outline-button" id="refresh-agent">刷新状态</button></div><div class="agent-grid"><section class="card"><div class="card-title-row"><div><h3 class="card-title">新建研究计划</h3><p class="card-caption">计划先保存为“待确认”，批准后才可运行。</p></div></div><form id="agent-plan-form" class="form-stack"><div class="field"><label for="agent-kind">计划类型</label><select id="agent-kind"><option value="company_snapshot_refresh">公司快照刷新</option><option value="sector_scan">赛道扫描</option><option value="event_triage">事件分诊</option><option value="memo_draft">备忘录草稿</option><option value="collection_cycle">授权资讯收集</option></select></div><div class="field"><label for="agent-name">计划名称</label><input id="agent-name" placeholder="例如：每周微软官方快照"></div><div class="field"><label for="agent-interval">间隔（分钟，至少 15）</label><input id="agent-interval" type="number" value="60" min="15" required></div><div id="agent-kind-fields">${agentPlanPayloadFields('company_snapshot_refresh')}</div><button class="action-button" type="submit">保存为待确认计划</button><div class="settings-help">授权收集必须同时提供来源范围和明确授权；所有研究结果都保持 draft。</div></form></section><section class="card"><div class="card-title-row"><div><h3 class="card-title">计划队列</h3><p class="card-caption">批准、运行和暂停都写入本地审计记录。</p></div><span class="pill demo">${dashboard.plans.length} 个计划</span></div><div class="agent-list">${dashboard.plans.length ? dashboard.plans.map(renderAgentPlan).join('') : '<div class="empty">还没有 Agent 计划。</div>'}</div></section></div><div class="agent-grid agent-grid-bottom"><section class="card"><div class="card-title-row"><div><h3 class="card-title">最近运行</h3><p class="card-caption">运行结果只会生成草稿或待审核线索。</p></div><button class="link-button" id="refresh-agent-runs">刷新</button></div><div class="agent-list">${dashboard.runs.length ? dashboard.runs.slice(0, 8).map(run => renderAgentRun(run, dashboard.tasksByRun)).join('') : '<div class="empty">还没有运行记录。</div>'}</div></section><section class="card"><div class="card-title-row"><div><h3 class="card-title">审核队列</h3><p class="card-caption">接受线索不等于批准事实；同一条线索的 review gate 与来源记录会合并显示。</p></div><span class="pill ${pendingReviews ? 'medium' : 'source'}">${pendingReviews} 条待审核</span></div><div class="review-list">${reviewQueue || '<div class="empty">暂无待审核线索。</div>'}</div></section></div><section class="card agent-artifacts-card"><div class="card-title-row"><div><h3 class="card-title">研究草稿产物</h3><p class="card-caption">快照、赛道、事件和备忘录的 Agent 结果会显示在这里；接受草稿不等于批准金融事实。</p></div><span class="pill ${dashboard.artifacts.length ? 'medium' : 'source'}">${dashboard.artifacts.length} 个草稿</span></div><div class="agent-list">${dashboard.artifacts.length ? dashboard.artifacts.slice(0, 8).map(renderArtifactRow).join('') : '<div class="empty">暂无草稿产物。</div>'}</div></section>`;
       bindAgentPage();
     } catch (error) { setError(error); }
   };
@@ -143,6 +151,7 @@
     $('#agent-plan-form')?.addEventListener('submit', createAgentPlan);
     $$('.agent-plan-action').forEach(button => button.addEventListener('click', () => handleAgentPlanAction(button.dataset.agentAction, button.dataset.agentPlanId)));
     $$('.agent-review-action').forEach(button => button.addEventListener('click', () => reviewAgentItem(button.dataset.reviewKind, button.dataset.reviewId, button.dataset.reviewStatus)));
+    $$('.agent-artifact-review').forEach(button => button.addEventListener('click', () => reviewAgentArtifact(button.dataset.artifactId, button.dataset.artifactDecision)));
   }
 
   async function createAgentPlan(event) {
@@ -160,6 +169,17 @@
       await T.renderAgent();
     } catch (error) { showToast(`操作失败：${error.message}`); }
   }
+
+  async function reviewAgentArtifact(id, decision) {
+    const reason = window.prompt(decision === 'accepted' ? '接受草稿理由（必填）' : '拒绝草稿理由（必填）', '已完成人工复核');
+    if (!reason) return;
+    try {
+      await api(`/api/agent/artifacts/${encodeURIComponent(id)}/review`, { method: 'POST', body: JSON.stringify({ decision, reason }) });
+      showToast(`草稿已${decision === 'accepted' ? '接受' : '拒绝'}；事实仍需单独审核`);
+      await T.renderAgent();
+    } catch (error) { showToast(`草稿审核失败：${error.message}`); }
+  }
+
 
   async function reviewAgentItem(kind, id, status) {
     let reason = '已核验来源范围与元数据';
