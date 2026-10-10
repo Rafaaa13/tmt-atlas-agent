@@ -151,16 +151,37 @@ class OfficialDataIntegrationTest(unittest.TestCase):
                 rows = [row for row in scan["eligible_rows"] if row.get("rank_group", {}).get("id") == group["id"]]
                 self.assertGreaterEqual(len(rows), 2)
                 self.assertEqual({row["revenue_growth"].get("currency") for row in rows}, {group["currency"]})
-                self.assertEqual({row["revenue_growth"].get("scope") for row in rows}, {group["scope"]})
+                self.assertEqual(
+                    {("consolidated group" if "consolidated" in str(row["revenue_growth"].get("scope")).lower()
+                      else row["revenue_growth"].get("scope")) for row in rows},
+                    {group["scope"]},
+                )
                 self.assertEqual({row["revenue_growth"].get("period") for row in rows}, {group["period"]})
+
+    def test_platform_sector_ranks_us_gaap_usd_peers_and_keeps_tencent_out(self):
+        """Company-specific scope labels ("Amazon consolidated group") must not
+        stop identical-basis peers from forming a rank group."""
+        scan = self.store.sector_scan("平台/电商/广告")
+        eligible = {row["company_id"]: row for row in scan["eligible_rows"]}
+        self.assertEqual(set(eligible), {"amazon", "alphabet", "meta"})
+        self.assertEqual(len(scan["rank_groups"]), 1)
+        group = scan["rank_groups"][0]
+        self.assertEqual(group["currency"], "USD")
+        self.assertEqual(group["accounting_basis"], "US GAAP")
+        self.assertEqual(group["company_ids"], ["meta", "alphabet", "amazon"])
+        self.assertEqual([eligible[c]["growth_rank"] for c in ("meta", "alphabet", "amazon")], [1, 2, 3])
+        # Tencent reports RMB under IFRS: it stays outside the ranking, no FX conversion.
+        self.assertEqual({row["company_id"] for row in scan["not_comparable_rows"]}, {"tencent"})
+        self.assertNotIn("growth_rank", scan["not_comparable_rows"][0])
 
     def test_sector_scan_ranks_only_identical_dimensions_and_keeps_buckets_disjoint(self):
         """Exercise the eligible ranking path with a temp synthetic corpus.
 
-        The curated corpus uses company-specific scope labels, so no real sector
-        ever produces a rank group; this fixture makes two USD and two EUR
-        companies fully comparable, one company comparable with nothing, and one
-        company without a prior-period revenue fact.
+        The curated corpus puts company names inside its scope labels; the scan
+        now reduces those to "consolidated group" before grouping. This fixture
+        uses neutral labels and makes two USD and two EUR companies fully
+        comparable, one company comparable with nothing, and one company without
+        a prior-period revenue fact.
         """
         tmp = tempfile.TemporaryDirectory()
         self.addCleanup(tmp.cleanup)

@@ -465,13 +465,28 @@ class AtlasStore:
 
         candidates = [row for row in rows if row["revenue_growth"].get("status") in {"direct", "derived"} and row["revenue_growth"].get("value") is not None]
         grouped: dict[tuple[Any, ...], list[dict[str, Any]]] = {}
+
+        def base_accounting_standard(value: Any) -> Any:
+            # "US GAAP; unaudited results release" and "US GAAP" are the same
+            # accounting standard; the suffix only describes the release type.
+            text = str(value or "").split(";")[0].strip()
+            return text or None
+
+        def consolidation_level(value: Any) -> Any:
+            # Scope strings carry the company name ("Amazon consolidated group"),
+            # so comparing them verbatim would put every company in its own group.
+            text = str(value or "").strip()
+            if "consolidated" in text.lower():
+                return "consolidated group"
+            return text or None
+
         for row in candidates:
             metric = row["revenue_growth"]
             signature = (
                 metric.get("currency"), metric.get("period"),
                 metric.get("period_start"), metric.get("period_end"),
-                metric.get("period_type"), metric.get("accounting_basis"),
-                metric.get("scope"), metric.get("unit"),
+                metric.get("period_type"), base_accounting_standard(metric.get("accounting_basis")),
+                consolidation_level(metric.get("scope")), metric.get("unit"),
             )
             grouped.setdefault(signature, []).append(row)
 
@@ -635,7 +650,16 @@ class AtlasStore:
         if snapshot:
             lines.append(f"### {snapshot['company']['name_zh']}（{snapshot['company']['name']}）")
             for metric in snapshot["metrics"][:7]:
-                lines.append(f"- {metric['label']}：{metric['display_value']}（{metric['period']}，{metric['quality']}；来源：{metric['source_title']}）")
+                if metric.get("status") == "missing" or not metric.get("period"):
+                    # A missing value has no period or source; say so instead of printing None.
+                    reasons = {
+                        "requires_research_and_development_and_revenue": "缺少同口径的研发费用或收入",
+                        "official_fact_unavailable": "官方语料中暂无该字段",
+                    }
+                    reason = reasons.get(metric.get("missing_reason")) or metric.get("quality") or "官方语料中暂无该字段"
+                    lines.append(f"- {metric['label']}：未披露（{reason}）")
+                else:
+                    lines.append(f"- {metric['label']}：{metric['display_value']}（{metric['period']}，{metric['quality']}；来源：{metric['source_title']}）")
                 evidence_count += 1
         if scan:
             lines.append(f"### {scan['sector']}比较")

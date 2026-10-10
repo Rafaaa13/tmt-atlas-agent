@@ -160,12 +160,12 @@ function renderOverview() {
         <button id="search-button">开始搜索</button>
         <div id="search-results" class="search-results" hidden></div>
       </div>
-      <div class="hero-meta"><span>◉ ${companies.length} 家研究对象</span><span>◌ ${events.length} 条事件线索</span><span>⌁ 官方历史事实 · 不做币种转换</span></div>
+      <div class="hero-meta"><span>◉ ${companies.length} 家研究对象</span><span>◌ 5 类 Agent 计划</span><span>⌁ 官方历史事实 · 不做币种转换</span></div>
     </section>
     <div class="kpi-grid">
       <div class="kpi"><div class="kpi-label">研究对象</div><div class="kpi-value">${companies.length}</div><div class="kpi-note">中美 TMT 公司 · <strong>官方历史语料</strong></div></div>
       <div class="kpi"><div class="kpi-label">官方事实</div><div class="kpi-value">${state.config.dataset?.official_fact_count ?? '—'}</div><div class="kpi-note">带来源 URL 与定位说明</div></div>
-      <div class="kpi"><div class="kpi-label">事件线索</div><div class="kpi-value">${state.events.length}</div><div class="kpi-note">按来源和影响等级组织</div></div>
+      <div class="kpi"><div class="kpi-label">Agent 计划类型</div><div class="kpi-value">5</div><div class="kpi-note">可批准 · 可暂停 · <strong>结果均为草稿</strong></div></div>
       <div class="kpi"><div class="kpi-label">外部模型</div><div class="kpi-value">可选</div><div class="kpi-note">默认关闭 · <strong>证据不外传</strong></div></div>
     </div>
     <div class="official-banner"><div>${officialDataBadge()} <strong>当前页面已切换为官方历史事实模式。</strong> 数字来自本地来源语料；派生值会展示公式，缺失字段保持“未披露”。</div><button class="link-button" data-view-action="automation">查看 Agent 工作流 →</button></div>
@@ -325,13 +325,14 @@ async function renderMemo() {
 
 function markdownToHtml(markdown) {
   return markdown.split('\n').map(line => {
-    const safe = esc(line);
-    if (line.startsWith('# ')) return `<h1>${safe.slice(2)}</h1>`;
-    if (line.startsWith('## ')) return `<h2>${safe.slice(3)}</h2>`;
-    if (line.startsWith('### ')) return `<h3>${safe.slice(4)}</h3>`;
-    if (line.startsWith('- ')) return `<li>${safe.slice(2)}</li>`;
-    if (line.startsWith('> ')) return `<blockquote>${safe.slice(2)}</blockquote>`;
-    return line.trim() ? `<p>${safe}</p>` : '';
+    // Escape after stripping the Markdown marker; slicing the escaped text would
+    // cut into entities such as "&gt;" and leave a stray "t;" in blockquotes.
+    if (line.startsWith('# ')) return `<h1>${esc(line.slice(2))}</h1>`;
+    if (line.startsWith('## ')) return `<h2>${esc(line.slice(3))}</h2>`;
+    if (line.startsWith('### ')) return `<h3>${esc(line.slice(4))}</h3>`;
+    if (line.startsWith('- ')) return `<li>${esc(line.slice(2))}</li>`;
+    if (line.startsWith('> ')) return `<blockquote>${esc(line.slice(2))}</blockquote>`;
+    return line.trim() ? `<p>${esc(line)}</p>` : '';
   }).join('');
 }
 
