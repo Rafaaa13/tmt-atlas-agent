@@ -2,7 +2,7 @@
 
 All notable changes to TMT Atlas are documented here.
 
-## [0.1.0] — 2026-10-08
+## [2.1.0] — 2026-09-16
 
 ### Added
 
